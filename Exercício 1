@@ -1,0 +1,58 @@
+import pandas as pd
+import requests
+import matplotlib.pyplot as plot
+
+url = "https://raw.githubusercontent.com/TGuedes17/NF3-BIG-DATA/main/world_alcohol%20(1).csv"
+big = pd.read_csv(url)
+big
+
+
+# (a) Agrupe os dados por tipo de bebidas;
+big['Beverage Types']
+
+# (b) Agrupe os dados por Região e por Ano;
+big['WHO region']
+big['Year']
+
+# (c) Seção de Contagens: Contar a ocorrência de Regiões, de Países e a soma da coluna de valores por Bebida.
+tp = big['WHO region'].value_counts()
+tp
+
+tp = big['Country'].value_counts()
+tp
+
+plus = big['Display Value'].sum()
+plus
+
+tp = big['Display Value'].value_counts()
+tp
+
+tp = big['Beverage Types'].value_counts()
+tp
+
+
+# (d) Realize análises estatísticas da coluna dos valores: Média, Moda, Mediana, Estatística Descritiva e Gráfico de comparação dos valores agrupados por tipo de bebida.
+big['Display Value'].mean()
+
+
+big['Display Value'].median()
+
+
+big['Display Value'].mode()
+
+
+big['Display Value'].describe()
+
+
+rest = big.groupby('Beverage Types')['Display Value'].mean()
+rest.plot.bar(x='Beverage Types')
+plot.xlabel('Tipos de Bebidas')
+plot.ylabel('Valores de Bebidas')
+
+
+# (e) Mostre resultados de acordo com alguns critérios: i. Mostrar a coluna de bebidas do ano de 1985. ii. Mostrar a coluna de Região com valores acima de 4.
+rest = big.loc[big['Year'] == 1985]
+rest
+
+rest = big.loc[big['WHO region']>'4']
+rest
