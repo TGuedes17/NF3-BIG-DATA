@@ -1,0 +1,80 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+asx = 'https://raw.githubusercontent.com/TGuedes17/NF3-BIG-DATA/main/cursos-prouni.csv'
+data = pd.read_csv(asx)
+data
+
+
+# (a) Efetuar a limpeza das colunas de notas: onde tiver NaN (Not a Number), substituir por 0,0.
+
+asx = [
+    "nota_integral_ampla",
+    "nota_integral_cotas",
+    "nota_parcial_ampla",
+    "nota_parcial_cotas",
+]
+data[asx] = data[asx].fillna(0.0)
+data
+
+# (b) Agrupe os dados pelo grau (Bacharelado, Licenciatura, etc.
+data.groupby(["grau", "curso_busca"])["grau"].count()
+
+
+# (c)  Agrupe os dados pelos cursos de Matemática, Medicina e Pedagogia.
+grupos = data[data['curso_busca'].isin(['Matemática', 'Medicina' , 'Pedagogia'])]
+print(grupos)
+
+# (d) Agrupe os dados por Estado e obtenha a média de notas de corte por Estado.
+#Agrupe os dados por Estado e obtenha a média de notas de corte por Estado uf_busca	nota_integral_ampla
+Elemento_Central = data.groupby('uf_busca')['nota_integral_ampla'].median()
+Elemento_Central
+
+# (e) Agrupe os dados pelos cursos Tecnológicos
+
+Final = data.loc[data['grau'] == 'Tecnológico']
+Final
+
+# (f)  Elimine a coluna “cidade_filtro” do dataframe.
+Del = data.drop("cidade_filtro", axis=1)
+Del
+
+# (g) Apresente a média das mensalidades dos cursos de Medicina.
+media = data[data["nome"] == "Medicina"]
+divide = media["mensalidade"].mean()
+divide
+
+# (h)  Média das notas de corte dos cursos de tempo integral.
+total = data[data["turno"] == "Integral"]
+mediaCorte = total["nota_integral_ampla"].mean()
+mediaCorte
+
+
+# (i) Estatística Descritiva das Notas Integral Ampla dos cursos de Bacharelado .
+
+college = data[data["grau"] == "Bacharelado"]
+wasd = college["nota_integral_ampla"].describe()
+
+
+# (J)  Gráfico comparativo entre o grau dos cursos (Bacharelado, Licenciatura, Tecnologia, etc) pelas Notas Integral de Cotas.
+
+# Dataframe com as colunas "grau" e "nota_integral_cotas"
+data = pd.DataFrame({
+    "grau": ["Bacharelado", "Licenciatura", "Tecnologia", "Bacharelado", "Licenciatura"],
+    "nota_integral_cotas": [7.5, 8.2, 6.8, 7.9, 8.1]
+})
+
+# Gráfico comparativo entre o grau dos cursos pelas Notas Integral de Cotas
+variedade = ["grau", "nota_integral_cotas"]
+reclusa = data[variedade]
+
+Grau = reclusa.groupby("grau")["nota_integral_cotas"].mean()
+
+fig, ax = plt.subplots()
+Grau.plot(kind="bar", ax=ax)
+
+ax.set_title("Notas de corte integral por curso")
+ax.set_xlabel("Tipos de Curso")
+ax.set_ylabel("Média das cotas")
+
+plt.show()
